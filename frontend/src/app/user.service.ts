@@ -21,9 +21,9 @@ export class UserService {
         private http: HttpClient) {}
 
     /** GET user exists by name from the server */
-    getUserExistsByName(name: string): Observable<boolean> {
+    getUserIdByName(name: string): Observable<number> {
         const url = `${this.uri}/exists/${name}`;
-        return this.http.get<boolean>(url);
+        return this.http.get<number>(url);
     }
 
     /** GET users from the server */

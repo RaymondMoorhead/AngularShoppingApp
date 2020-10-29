@@ -8,7 +8,7 @@ function createRouter(db) {
   // GET if user data exists, not the contents
   router.get('/user/exists/:name', (req, res, next) => {
     db.query(
-      'select exists(select 1 from user where name=?)',
+      'select id from user where name=?',
       [req.params.name],
       (error, results) => {
         if(error) {

@@ -3,12 +3,13 @@
 <div *ngIf="error">
     {{error}}
 </div>
+<!-- If user is present, do user stuff -->
 <div *ngIf="user != null && (user.id != -1); else noUserPresent">
     <button (click)="doLogout()">Logout</button>
 
     <!-- CREDENTIAL MODIFICATION -->
     <div *ngIf="showDetails; else hideDetails">
-        <button (click)="hideUserDetails()">Hide Personal Details</button><br>
+        <button (click)="hideUserDetails()">Hide Personal Details</button><br><br>
         {{user.id}}
         <input [(ngModel)]="name" placeholder="name"/>
         <input type="password" [(ngModel)]="password" placeholder="password"/>
@@ -17,23 +18,29 @@
         <button (click)="updateUser()">Update</button>
     </div>
     <ng-template #hideDetails>
-        <button (click)="showUserDetails()">Show Personal Details</button>
+        <br><button (click)="showUserDetails()">Show Personal Details</button><br><br>
+
         <!-- ADMIN STUFF -->
-
-        <!-- CREATE NEW USER -->
-        <button (click)="hideUserDetails()">Hide Personal Details</button><br>
-        {{user.id}}
-        <input [(ngModel)]="name" placeholder="name"/>
-        <input type="password" [(ngModel)]="password" placeholder="password"/>
-        <input type="password" [(ngModel)]="passwordConfirm" placeholder="confirm password"/>
-        <input type="email" [(ngModel)]="email" placeholder="email"/>
-        <input type="number" [(ngModel)]="privilage" placeholder="privilage"/>
-        <button (click)="addUser()">Create User</button>
-
-        <!-- VIEW USERS -->
         <div *ngIf="isAdmin()">
-            <button (click)="getUsers()">Reload Users</button><br>
-            <table>
+            <!-- CREATE NEW USER -->
+            {{user.id}}
+            <input [(ngModel)]="name" placeholder="name"/>
+            <input type="password" [(ngModel)]="password" placeholder="password"/>
+            <input type="password" [(ngModel)]="passwordConfirm" placeholder="confirm password"/>
+            <input type="email" [(ngModel)]="email" placeholder="email"/>
+            <!-- <input type="number" [(ngModel)]="privilage" placeholder="privilage"/> -->
+            <select name="privilage"  [(ngModel)]="privilage">
+                <option selected="selected" value="0">Standard</option>
+                <option value="1">Admin</option>
+            </select>
+
+            <button (click)="addUser()">Create User</button>
+
+            <!-- VIEW USERS -->
+            <br><br>
+            <button (click)="getUsers()">Reload Users</button>
+            <br>
+            <table border="1">
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
@@ -52,7 +59,9 @@
         </div>
     </ng-template>
 </div>
+<!-- If no user is present, we need to get one -->
 <ng-template #noUserPresent>
+    <!-- Login -->
     <div *ngIf="showLogin; else registerNewUser">
         Login User
         <br><br>
@@ -68,6 +77,7 @@
         <br><br>
         <button (click)="beginRegistration()">Register New User</button>
     </div>
+    <!-- Register -->
     <ng-template #registerNewUser>
         Register New User
         <br><br>

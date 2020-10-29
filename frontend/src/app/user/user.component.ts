@@ -50,6 +50,7 @@ export class UserComponent implements OnInit {
     else {
       this.error = null;
       this.getUser();
+      this.hideUserDetails();
     }
   }
 
@@ -72,27 +73,22 @@ export class UserComponent implements OnInit {
       this.error = 'You must have a valid email address';
     }
     else {
-      if(this.getUserExists()) {
-        this.error = 'That username is already in use';
-        return;
-      }
       this.error = null;
       this.addUser();
-      this.beginLogin();
-          
+      this.beginLogin()
     }
   }
 
   showUserDetails() {
+    this.resetInputCredentials();
     this.showDetails = true;
     this.name = this.user.name;
     this.email = this.user.email;
-    this.resetInputCredentials();
   }
 
   hideUserDetails() {
-    this.showDetails = false;
     this.resetInputCredentials();
+    this.showDetails = false;
   }
 
   isAdmin(): boolean {
@@ -118,14 +114,10 @@ export class UserComponent implements OnInit {
 
   getUser(): void {
     this.userService.getUserByNameAndPassword(this.name, this.password)
-      .subscribe(user => this.user = user);
-  }
-
-  getUserExists(): boolean {
-    let result: boolean;
-    this.userService.getUserExistsByName(this.name)
-      .subscribe(userExists => result = userExists);
-    return result
+      .subscribe(user => {
+        this.user = user;
+        this.getUsers();
+      });
   }
 
   updateUser(): void {
@@ -143,11 +135,32 @@ export class UserComponent implements OnInit {
 
   addUser(): void {
     let user = new User(-1, this.name, this.password, this.email, this.privilage);
-    this.userService.addUser(user).subscribe();
+    // this.userService.getUserIdByName(this.name).subscribe((id: number) => {
+    //   if(id < 0) {
+    //     this.userService.addUser(new User(-1,
+    //                                       this.name,
+    //                                       this.password,
+    //                                       this.email,
+    //                                       this.privilage))
+    //     .subscribe(() => this.getUsers());
+        
+    //   }
+    //   else {
+    //     console.log(this.name + ' exists with id ' + id);
+    //     this.error = 'Name is already in use';
+    //   }
+    // });
+
+    this.userService.addUser(new User(-1,
+                                          this.name,
+                                          this.password,
+                                          this.email,
+                                          this.privilage))
+        .subscribe(() => this.getUsers());
   }
 
   deleteSelf(): void {
-    this.userService.deleteUser(this.user.id).subscribe();
+    this.userService.deleteUser(this.user.id).subscribe(() => {this.doLogout();});
   }
 
   // PRIVATE METHODS
