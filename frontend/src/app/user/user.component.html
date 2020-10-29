@@ -1,0 +1,94 @@
+<!-- https://angular.io/guide/user-input -->
+
+<div *ngIf="error">
+    {{error}}
+</div>
+<div *ngIf="user != null && (user.id != -1); else noUserPresent">
+    <button (click)="doLogout()">Logout</button>
+
+    <!-- CREDENTIAL MODIFICATION -->
+    <div *ngIf="showDetails; else hideDetails">
+        <button (click)="hideUserDetails()">Hide Personal Details</button><br>
+        {{user.id}}
+        <input [(ngModel)]="name" placeholder="name"/>
+        <input type="password" [(ngModel)]="password" placeholder="password"/>
+        <input type="password" [(ngModel)]="passwordConfirm" placeholder="confirm password"/>
+        <input type="email" [(ngModel)]="email" placeholder="email"/>
+        <button (click)="updateUser()">Update</button>
+    </div>
+    <ng-template #hideDetails>
+        <button (click)="showUserDetails()">Show Personal Details</button>
+        <!-- ADMIN STUFF -->
+
+        <!-- CREATE NEW USER -->
+        <button (click)="hideUserDetails()">Hide Personal Details</button><br>
+        {{user.id}}
+        <input [(ngModel)]="name" placeholder="name"/>
+        <input type="password" [(ngModel)]="password" placeholder="password"/>
+        <input type="password" [(ngModel)]="passwordConfirm" placeholder="confirm password"/>
+        <input type="email" [(ngModel)]="email" placeholder="email"/>
+        <input type="number" [(ngModel)]="privilage" placeholder="privilage"/>
+        <button (click)="addUser()">Create User</button>
+
+        <!-- VIEW USERS -->
+        <div *ngIf="isAdmin()">
+            <button (click)="getUsers()">Reload Users</button><br>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Privilage</th>
+                    <th>Options</th>
+                </tr>
+                <tr *ngFor="let entry of users">
+                    <td>{{entry.id}}</td>
+                    <td>{{entry.name}}</td>
+                    <td>{{entry.email}}</td>
+                    <td>{{entry.privilage}}</td>
+                    <td><button (click)="deleteUser(entry.id)">Delete</button></td>
+                </tr>
+            </table>
+        </div>
+    </ng-template>
+</div>
+<ng-template #noUserPresent>
+    <div *ngIf="showLogin; else registerNewUser">
+        Login User
+        <br><br>
+        <label>Name:
+            <input [(ngModel)]="name" placeholder="name"/>
+        </label>
+        <br><br>
+        <label>Password:
+            <input type="password" [(ngModel)]="password" placeholder="password"/>
+        </label>
+        <br><br>
+        <button (click)="doLogin()">Login</button>
+        <br><br>
+        <button (click)="beginRegistration()">Register New User</button>
+    </div>
+    <ng-template #registerNewUser>
+        Register New User
+        <br><br>
+        <label>Name:
+            <input [(ngModel)]="name" placeholder="name"/>
+        </label>
+        <br><br>
+        <label>Password:
+            <input type="password" [(ngModel)]="password" placeholder="password"/>
+        </label>
+        <br><br>
+        <label>Confirm Password:
+            <input type="password" [(ngModel)]="passwordConfirm" placeholder="confirm password"/>
+        </label>
+        <br><br>
+        <label>Email:
+            <input type="email" [(ngModel)]="email" placeholder="email"/>
+        </label>
+        <br><br>
+        <button (click)="doRegistration()">Register</button>
+        <br><br>
+        <button (click)="beginLogin()">Login Existing User</button>
+    </ng-template>
+</ng-template>
